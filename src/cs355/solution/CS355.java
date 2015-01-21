@@ -5,11 +5,15 @@
 package cs355.solution;
 
 import cs355.code.controller.Controller;
+import cs355.code.controller.MouseDragListener;
+import cs355.code.controller.ProjectMouseListener;
+import cs355.code.model.DataModel;
 import cs355.code.view.GUIFunctions;
+import cs355.code.view.ViewRefresh;
 
 /**
  *
- * @author [your name here]
+ * @author [Andrew Hyte]
  */
 public class CS355 
 {
@@ -21,8 +25,11 @@ public class CS355
     {
     	// Fill in the parameters below with your controller, view, 
     	//   mouse listener, and mouse motion listener
-        Controller controller = new Controller();
-        GUIFunctions.createCS355Frame(controller,null,null,null);
+        Controller controller = new Controller(DataModel.getInstance());
+        ViewRefresh refreshView = new ViewRefresh();
+        ProjectMouseListener mouseListener = new ProjectMouseListener(controller);
+        MouseDragListener mouseDragListener = new MouseDragListener(controller);
+        GUIFunctions.createCS355Frame(controller,refreshView,mouseListener,mouseDragListener);
         
         GUIFunctions.refresh();        
     }

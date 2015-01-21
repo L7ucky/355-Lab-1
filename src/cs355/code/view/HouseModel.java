@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class HouseModel extends WireFrame
 {
-    List<Line3D> lines = new ArrayList<>();
+    List<Line3D> lines = new ArrayList<Line3D>();
     
     public HouseModel()
     {
