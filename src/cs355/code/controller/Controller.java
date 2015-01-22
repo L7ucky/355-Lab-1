@@ -4,6 +4,7 @@ import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 import cs355.code.controller.actionClasses.*;
 import cs355.code.model.DataModel;
 import cs355.code.model.State;
+import cs355.code.view.GUIFunctions;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +29,7 @@ public class Controller implements CS355Controller {
     @Override
     public void colorButtonHit(Color c) {
         data.setCurrentColor(c);
+        GUIFunctions.changeSelectedColor(c);
     }
 
     @Override

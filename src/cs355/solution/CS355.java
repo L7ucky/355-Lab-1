@@ -30,6 +30,7 @@ public class CS355
         ProjectMouseListener mouseListener = new ProjectMouseListener(controller);
         MouseDragListener mouseDragListener = new MouseDragListener(controller);
         GUIFunctions.createCS355Frame(controller,refreshView,mouseListener,mouseDragListener);
+        GUIFunctions.changeSelectedColor(DataModel.getInstance().getCurrentColor());
         
         GUIFunctions.refresh();        
     }

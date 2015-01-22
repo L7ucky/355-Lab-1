@@ -45,7 +45,10 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     break;
                 case CIRCLE:
                     Circle circle = (Circle) data.get(i);
-                    Ellipse2D circ = new Ellipse2D.Double(circle.getCenter().getX(),circle.getCenter().getY(),circle.getRadius(),circle.getRadius());
+                    double cirW = circle.getRadius()*2;
+                    double cirH = circle.getRadius()*2;
+                    Point upperLeft = convertFROMcenter(circle.getCenter(),cirW,cirH);
+                    Ellipse2D circ = new Ellipse2D.Double(upperLeft.getX(),upperLeft.getY(),cirW,cirH);
                     g2d.setColor(circle.getColor());
                     g2d.fill(circ);
                     break;
@@ -63,7 +66,10 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     break;
                 case ELLIPSE:
                     Ellipse ellipse = (Ellipse) data.get(i);
-                    Ellipse2D elli = new Ellipse2D.Double(ellipse.getCenter().getX(),ellipse.getCenter().getY(),ellipse.getWidth(),ellipse.getHeight());
+                    double elleW = ellipse.getWidth();
+                    double elleH = ellipse.getHeight();
+                    Point elleUpperLeft = convertFROMcenter(ellipse.getCenter(),elleW,elleH);
+                    Ellipse2D elli = new Ellipse2D.Double(elleUpperLeft.getX(),elleUpperLeft.getY(),elleW,elleH);
                     g2d.setColor(ellipse.getColor());
                     g2d.fill(elli);
                     break;
@@ -82,5 +88,10 @@ public class ViewRefresh implements ViewRefresher, Observer {
     @Override
     public void update(Observable o, Object arg) {
         GUIFunctions.refresh();
+    }
+
+    private Point convertFROMcenter(Point c, double w, double h){
+
+        return new Point((int)(c.getX()-(w/2)),(int)(c.getY()-(h/2)));
     }
 }

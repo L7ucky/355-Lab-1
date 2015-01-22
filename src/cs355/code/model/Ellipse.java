@@ -12,8 +12,8 @@ public class Ellipse extends Shape{
     double width;
     State state = State.ELLIPSE;
 
-    public Ellipse(Point newUpperLeft, double newWidth, double newHeight) {
-        this.center = newUpperLeft;
+    public Ellipse(Point newCenter, double newWidth, double newHeight) {
+        this.center = newCenter;
         this.width= newWidth;
         this.height = newHeight;
     }

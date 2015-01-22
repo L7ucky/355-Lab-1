@@ -1,5 +1,7 @@
 package cs355.code.controller.actionClasses;
 
+import com.sun.javafx.scene.layout.region.Margins;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import cs355.code.controller.Controller;
 import cs355.code.model.*;
 import cs355.code.model.Shape;
@@ -55,6 +57,13 @@ public class EllipseController implements StateAction  {
         else{
 
         }
-        return new Ellipse(newUpperLeft,newWidth,newHeight);
+
+        return new Ellipse(convertTOcenter(newUpperLeft,newWidth,newHeight),newWidth,newHeight);
+    }
+    public Point convertTOcenter(Point UL, double W, double H){
+        double newW =W/2;
+        double newH = H/2;
+
+        return new Point((int)(UL.getX()+newW),(int)(UL.getY()+newH));
     }
 }
