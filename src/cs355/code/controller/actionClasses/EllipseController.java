@@ -1,69 +1,87 @@
 package cs355.code.controller.actionClasses;
 
-import com.sun.javafx.scene.layout.region.Margins;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import cs355.code.controller.Controller;
 import cs355.code.model.*;
 import cs355.code.model.Shape;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 /**
  * Created by Andrew on 1/11/2015.
  */
-public class EllipseController implements StateAction  {
+public class EllipseController extends MouseEventHandler  {
 
     Controller controller;
 
-    public EllipseController(Controller cont){
-        this.controller = cont;
+    public EllipseController(Controller controller) {
+        super(controller);
+        this.controller = controller;
+    }
+    @Override
+    public Shape mouseDown(Point2D p) {
+        return new Ellipse(convertTOcenter(p,0,0),0,0);
     }
 
     @Override
-    public Shape run(MouseEvent e, Boolean dragging) {
-        Point newUpperLeft = new Point(0,0);
+    public void mouseUp(Point2D p) {
+        super.mouseUp(p);
+    }
+
+    @Override
+    public Shape mouseClicked(Point2D p) {
+        return super.mouseClicked(p);
+    }
+
+    @Override
+    public void mouseMoved(Point2D p) {
+        super.mouseMoved(p);
+    }
+
+    @Override
+    public Shape mouseDragged(Point2D p) {
+        Point2D newUpperLeft = new Point2D.Double(0,0);
         double newWidth = 0;
         double newHeight = 0;
 
-        if(dragging){
-            Point original = controller.getOriginalClick();
-            if(e.getX() >= original.getX()){
-                if(e.getY() > original.getY()){ //--------------------- FOURTH QUADRANT
+        
+            Point2D original = controller.getOriginalClick();
+            if(p.getX() >= original.getX()){
+                if(p.getY() > original.getY()){ //--------------------- FOURTH QUADRANT
                     newUpperLeft = original;
-                    newWidth = Math.abs(e.getX()-original.getX());
-                    newHeight = Math.abs(e.getY()-original.getY());
+                    newWidth = Math.abs(p.getX()-original.getX());
+                    newHeight = Math.abs(p.getY()-original.getY());
                 }
                 else{//------------------------------------------------ FIRST QUADRANT
-                    newUpperLeft = new Point((int)original.getX(),e.getY());
-                    newWidth = Math.abs(e.getX()-original.getX());
-                    newHeight =  Math.abs(original.getY()-e.getY());
+                    newUpperLeft = new Point2D.Double((int)original.getX(),p.getY());
+                    newWidth = Math.abs(p.getX()-original.getX());
+                    newHeight =  Math.abs(original.getY()-p.getY());
                 }
             }
             else{
-                if(e.getY() <= original.getY()) {//-------------------- SECOND QUADRANT
-                    newUpperLeft = new Point(e.getX(),e.getY());
-                    newWidth = Math.abs(original.getX() - e.getX());
-                    newHeight = Math.abs(original.getY()-e.getY());
+                if(p.getY() <= original.getY()) {//-------------------- SECOND QUADRANT
+                    newUpperLeft = new Point2D.Double(p.getX(),p.getY());
+                    newWidth = Math.abs(original.getX() - p.getX());
+                    newHeight = Math.abs(original.getY()-p.getY());
                 }
                 else{//------------------------------------------------ THIRD QUADRANT
-                    newUpperLeft = new Point(e.getX(),(int)original.getY());
-                    newWidth = Math.abs(original.getX() - e.getX());
-                    newHeight =  Math.abs(e.getY()-original.getY());
+                    newUpperLeft = new Point2D.Double(p.getX(),(int)original.getY());
+                    newWidth = Math.abs(original.getX() - p.getX());
+                    newHeight =  Math.abs(p.getY()-original.getY());
                 }
             }
 
-        }
-        else{
-
-        }
-
         return new Ellipse(convertTOcenter(newUpperLeft,newWidth,newHeight),newWidth,newHeight);
     }
-    public Point convertTOcenter(Point UL, double W, double H){
+
+    @Override
+    public void reset() {
+        super.reset();
+    }
+
+    public Point2D convertTOcenter(Point2D UL, double W, double H){
         double newW =W/2;
         double newH = H/2;
 
-        return new Point((int)(UL.getX()+newW),(int)(UL.getY()+newH));
+        return new Point2D.Double((UL.getX()+newW),(UL.getY()+newH));
     }
 }

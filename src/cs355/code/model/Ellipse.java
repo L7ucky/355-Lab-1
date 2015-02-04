@@ -1,28 +1,35 @@
 package cs355.code.model;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created by Andrew on 1/10/2015.
  */
 public class Ellipse extends Shape{
 
-    Point center;
     double height;
     double width;
     State state = State.ELLIPSE;
 
-    public Ellipse(Point newCenter, double newWidth, double newHeight) {
-        this.center = newCenter;
+    public Ellipse(Point2D newCenter, double newWidth, double newHeight) {
+        setCenter(newCenter);
         this.width= newWidth;
         this.height = newHeight;
+        setRotation(0);
     }
 
-    public Point getCenter() {
-        return center;
-    }
-    public void setCenter(Point center) {
-        this.center = center;
+    @Override
+    public boolean contains(Point2D point) {
+
+        double x = point.getX();
+        double y = point.getY();
+        double halfWidth = width/2;
+        double halfHeight = height/2;
+
+        boolean equation = ((x*x)/(halfWidth*halfWidth) + (y*y)/(halfHeight*halfHeight)) <= 1;
+
+        return equation;
     }
 
     public double getHeight() {
@@ -32,6 +39,7 @@ public class Ellipse extends Shape{
         this.height = height;
     }
 
+    @Override
     public double getWidth() {
         return width;
     }

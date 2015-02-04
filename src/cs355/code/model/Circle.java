@@ -1,33 +1,34 @@
 package cs355.code.model;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 /**
  * Created by Andrew on 1/10/2015.
  */
 public class Circle extends Shape{
 
-    public Circle(Point center, double diameter){
-        this.center = center;
-        this.diameter = diameter;
+    public Circle(Point2D center, double radius){
+        setCenter(center);
+        this.radius = radius;
     }
 
-    Point center;
-    double diameter;
+    double radius;
     State state= State.CIRCLE;
 
-    public Point getCenter() {
-        return center;
-    }
-    public void setCenter(Point center) {
-        this.center = center;
+    @Override
+    public boolean contains(Point2D point) {
+        double x = point.getX(), y = point.getY(), r2 = radius*radius;
+        return (
+                (x*x)/(r2) + (y*y)/(r2)
+        ) <= 1;
     }
 
     public double getRadius() {
-        return diameter;
+        return radius;
     }
-    public void setRadius(double diameter) {
-        this.diameter = diameter;
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
     public State getState() {
@@ -35,5 +36,15 @@ public class Circle extends Shape{
     }
     public void setState(State state) {
         this.state = state;
+    }
+
+    @Override
+    public double getHeight() {
+        return radius*2;
+    }
+
+    @Override
+    public double getWidth() {
+        return radius*2;
     }
 }

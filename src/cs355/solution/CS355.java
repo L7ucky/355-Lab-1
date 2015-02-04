@@ -5,8 +5,6 @@
 package cs355.solution;
 
 import cs355.code.controller.Controller;
-import cs355.code.controller.MouseDragListener;
-import cs355.code.controller.ProjectMouseListener;
 import cs355.code.model.DataModel;
 import cs355.code.view.GUIFunctions;
 import cs355.code.view.ViewRefresh;
@@ -27,9 +25,7 @@ public class CS355
     	//   mouse listener, and mouse motion listener
         Controller controller = new Controller(DataModel.getInstance());
         ViewRefresh refreshView = new ViewRefresh();
-        ProjectMouseListener mouseListener = new ProjectMouseListener(controller);
-        MouseDragListener mouseDragListener = new MouseDragListener(controller);
-        GUIFunctions.createCS355Frame(controller,refreshView,mouseListener,mouseDragListener);
+        GUIFunctions.createCS355Frame(controller,refreshView,controller.getMouseListener(),controller.getMouseDragListener());
         GUIFunctions.changeSelectedColor(DataModel.getInstance().getCurrentColor());
         
         GUIFunctions.refresh();        
