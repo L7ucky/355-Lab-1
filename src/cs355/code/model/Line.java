@@ -21,6 +21,9 @@ public class Line extends Shape{
 
     @Override
     public boolean contains(Point2D point) {
+
+        point = new Point2D.Double((point.getX()+start.getX()),(point.getY()+start.getY()));
+
         Vector starting = new Vector(start);
         Vector ending = new Vector(end);
         Vector pointVector = new Vector(point);
@@ -33,11 +36,15 @@ public class Line extends Shape{
 
         // Less than or equal to 4 pixels away from line
         double t = pointToLineVector.dot(lineVector)/(lineLength);
-        if (t < 0) return pointVector.distanceTo(starting) <= 4;
+        double distS = pointVector.distanceTo(starting);
+        double distE = pointVector.distanceTo(ending);
+
+        if (t < 0) return  distS<= 4;
         if (t > 1) return pointVector.distanceTo(ending) <= 4;
 
         Vector projection = starting.plus(lineVector.times(t));
-        return pointVector.distanceTo(projection) <= 4;
+        double distP = pointVector.distanceTo(projection);
+        return distP <= 4;
     }
 
     public Point2D getStart() {

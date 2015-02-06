@@ -1,6 +1,9 @@
 package cs355.code.controller.actionClasses.handelTypes;
 
+import cs355.code.model.Line;
 import cs355.code.model.Shape;
+import cs355.code.model.State;
+import cs355.code.model.Triangle;
 
 import java.awt.geom.Point2D;
 
@@ -15,7 +18,16 @@ public class Default implements Handle {
         double moveX = newPoint.getX()-previousPoint.getX();
         double moveY = newPoint.getY()-previousPoint.getY();
 
-        selected.setCenter(new Point2D.Double((selected.getCenter().getX() + moveX), (selected.getCenter().getY() + moveY)));
-        return selected;
+        if(selected.getState() == State.LINE){
+            Line line = (Line)selected;
+            line.setStart(new Point2D.Double((line.getStart().getX() + moveX), (line.getStart().getY() + moveY)));
+            line.setEnd(new Point2D.Double((line.getEnd().getX() + moveX), (line.getEnd().getY() + moveY)));
+            return selected;
+        }
+        else{
+            selected.setCenter(new Point2D.Double((selected.getCenter().getX() + moveX), (selected.getCenter().getY() + moveY)));
+            return selected;
+        }
+
     }
 }

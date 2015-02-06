@@ -15,15 +15,37 @@ public abstract class Shape {
 
 
     public AffineTransform worldToObject() {
+        if(this.getState() == State.LINE)
+            return lineWorldToObject();
         AffineTransform worldToObj = new AffineTransform();
         worldToObj.rotate(-this.getRotation());
         worldToObj.translate(-this.getCenter().getX(), -this.getCenter().getY());
         return worldToObj;
     }
 
+    private AffineTransform lineWorldToObject() {
+        Line line = (Line)this;
+
+        AffineTransform worldToObj = new AffineTransform();
+        worldToObj.rotate(-this.getRotation());
+        worldToObj.translate(-line.getStart().getX(), -line.getStart().getY());
+        return worldToObj;
+    }
+
     public AffineTransform objectToWorld() {
+        if(this.getState() == State.LINE)
+            return lineObjectToWorld();
         AffineTransform objToWorld = new AffineTransform();
         objToWorld.translate(center.getX(), center.getY());
+        objToWorld.rotate(this.getRotation());
+        return objToWorld;
+    }
+
+    private AffineTransform lineObjectToWorld() {
+        Line line = (Line)this;
+
+        AffineTransform objToWorld = new AffineTransform();
+        objToWorld.translate(line.getStart().getX(), line.getStart().getY());
         objToWorld.rotate(this.getRotation());
         return objToWorld;
     }

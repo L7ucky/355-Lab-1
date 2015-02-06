@@ -16,6 +16,8 @@ public class Triangle extends Shape{
     Point2D three;
     int[] Xpoints = new int[3];
     int[] Ypoints= new int[3];
+    int[] XpointsObj = new int[3];
+    int[] YpointsObj = new int[3];
 
     State state = State.TRIANGLE;
 
@@ -36,25 +38,25 @@ public class Triangle extends Shape{
         one = point;
         two = point1;
         three = point2;
+
+        XpointsObj = this.getXpointsObjFunc();
+        YpointsObj = this.getYpointsObjFunc();
     }
 
     @Override
     public boolean contains(Point2D p) {
-        Vector vectorOne = new Vector(one);
-        Vector vectorTwo = new Vector(two);
-        Vector vectorThree = new Vector(three);
 
-        Vector vectorOneCopy = vectorOne;
-        vectorOne = vectorOne.minus(vectorTwo);
-        vectorTwo = vectorTwo.minus(vectorThree);
-        vectorThree = vectorThree.minus(vectorOneCopy);
+        double planeAB = (XpointsObj[0]-p.getX())*(YpointsObj[1]-p.getY())-(XpointsObj[1]-p.getX())*(YpointsObj[0]-p.getY());
+        double planeBC = (XpointsObj[1]-p.getX())*(YpointsObj[2]-p.getY())-(XpointsObj[2] - p.getX())*(YpointsObj[1]-p.getY());
+        double planeCA = (XpointsObj[2]-p.getX())*(YpointsObj[0]-p.getY())-(XpointsObj[0] - p.getX())*(YpointsObj[2]-p.getY());
+        return sign(planeAB)==sign(planeBC) && sign(planeBC)==sign(planeCA);
+    }
 
-        // All test must either be negative or all must be positive
-        boolean testOne = evaluate(p, vectorOne, vectorTwo) < 0;
-        boolean testTwo = evaluate(p, vectorTwo, vectorThree) < 0;
-        boolean testThree = evaluate(p, vectorThree, vectorOne) < 0;
-
-        return ((testOne && testTwo && testThree) || (!testOne && !testTwo && !testThree));
+    private int sign(double num){
+        if(num >= 0)
+            return 1;
+        else
+            return -1;
     }
 
     private double evaluate(Point2D pointOne, Point2D pointTwo, Point2D pointThree) {
@@ -90,21 +92,21 @@ public class Triangle extends Shape{
     public Point2D getOne() {
         return one;
     }
-    public void setOne(Point one) {
+    public void setOne(Point2D one) {
         this.one = one;
     }
 
     public Point2D getThree() {
         return three;
     }
-    public void setThree(Point three) {
+    public void setThree(Point2D three) {
         this.three = three;
     }
 
     public Point2D getTwo() {
         return two;
     }
-    public void setTwo(Point two) {
+    public void setTwo(Point2D two) {
         this.two = two;
     }
 
@@ -118,7 +120,6 @@ public class Triangle extends Shape{
     public int[] getXpoints() {
         return Xpoints;
     }
-
     public void setXpoints(int[] xpoints) {
         Xpoints = xpoints;
     }
@@ -126,21 +127,43 @@ public class Triangle extends Shape{
     public int[] getYpoints() {
         return Ypoints;
     }
-
     public void setYpoints(int[] ypoints) {
         Ypoints = ypoints;
     }
 
     public int[] getXpointsObj() {
-        int[] xs = Xpoints;
-        Point2D center= this.getCenter();
+        return XpointsObj;
+    }
+    public void setXpointsObj(int[] xpointsObj) {
+        XpointsObj = xpointsObj;
+    }
 
-        xs[0] = (int)(xs[0]calc
-        )
-        return xs;
+    public void setYpointsObj(int[] ypointsObj) {
+        YpointsObj = ypointsObj;
     }
     public int[] getYpointsObj() {
+        return YpointsObj;
+    }
+
+    public int[] getXpointsObjFunc() {
+        int[] xs = new int[3];
+        double centerX= this.getCenter().getX();
+        //Deep copy
+        for(int i=0; i < Xpoints.length; i++){
+            xs[i]=(int)(Xpoints[i]-centerX);
+        }
+
+        return xs;
+    }
+    public int[] getYpointsObjFunc() {
         int[] ys = new int[3];
+        double centerY= this.getCenter().getY();
+
+        //Deep copy
+        for(int i=0; i < Ypoints.length; i++){
+            ys[i]=(int)(Ypoints[i]-centerY);
+        }
+
         return ys;
     }
 }

@@ -53,17 +53,21 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     break;
                 case LINE:
                     Line line = (Line)data.get(i);
-                    Line2D li = new Line2D.Double(line.getStart(),line.getEnd());
+                    g2d.setTransform(line.objectToWorld());
+                    Line2D li = new Line2D.Double(
+                                new Point2D.Double(0.0,0.0),
+                                new Point2D.Double((line.getEnd().getX()-line.getStart().getX()),(line.getEnd().getY()-line.getStart().getY())));
                     g2d.setColor(line.getColor());
                     g2d.draw(li);
+                    g2d.setTransform(line.worldToObject());
                     break;
                 case TRIANGLE:
                     Triangle triangle = (Triangle)data.get(i);
-//                    g2d.setTransform(triangle.objectToWorld());
-                    Polygon tri = new Polygon(triangle.getXpoints(), triangle.getYpoints(), triangle.getXpoints().length);
+                    g2d.setTransform(triangle.objectToWorld());
+                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), triangle.getXpoints().length);
                     g2d.setColor(triangle.getColor());
                     g2d.fillPolygon(tri);
-//                    g2d.setTransform(triangle.worldToObject());
+                    g2d.setTransform(triangle.worldToObject());
                     break;
                 case ELLIPSE:
                     Ellipse ellipse = (Ellipse) data.get(i);
@@ -122,16 +126,19 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     break;
                 case LINE:
                     Line line = (Line)shape;
+                    g2d.setTransform(line.objectToWorld());
                     drawLineHandles(line, g2d);
+                    g2d.setTransform(line.worldToObject());
                     break;
                 case TRIANGLE:
                     Triangle triangle = (Triangle)shape;
 
-
-                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpoints(), triangle.getXpoints().length);
+                    g2d.setTransform(triangle.objectToWorld());
+                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), triangle.getXpoints().length);
                     g2d.setPaint(Color.WHITE);
                     g2d.drawPolygon(tri);
-                    //drawHandle(triangle, g2d);
+                    drawHandle(triangle, g2d);
+                    g2d.setTransform(triangle.worldToObject());
                     break;
                 case ELLIPSE:
                     Ellipse ellipse = (Ellipse) shape;
@@ -164,8 +171,8 @@ public class ViewRefresh implements ViewRefresher, Observer {
         Point2D end = line.getEnd();
 
         g2d.setColor(Color.white);
-        g2d.fillOval((int) start.getX() - 3, (int) start.getY() - 3, 7, 7);
-        g2d.fillOval((int) end.getX() - 3, (int) end.getY() - 3, 7, 7);
+        g2d.fillOval(-3, -3, 7, 7);
+        g2d.fillOval((int)((end.getX()-start.getX()) - 3), (int) ((end.getY()-start.getY()) - 3) - 3, 7, 7);
         g2d.setColor(line.getColor());
     }
 
