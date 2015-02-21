@@ -1,17 +1,10 @@
 package cs355.code.controller.actionClasses;
 
 import cs355.code.controller.Controller;
-import cs355.code.controller.actionClasses.handelTypes.Default;
-import cs355.code.controller.actionClasses.handelTypes.Handle;
-import cs355.code.controller.actionClasses.handelTypes.None;
-import cs355.code.controller.actionClasses.handelTypes.Rotate;
-import cs355.code.model.DataModel;
-import cs355.code.model.Line;
-import cs355.code.model.Shape;
-import cs355.code.model.Triangle;
+import cs355.code.controller.actionClasses.handelTypes.*;
+import cs355.code.model.*;
 import cs355.code.view.GUIFunctions;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
@@ -20,7 +13,7 @@ import java.awt.geom.Point2D;
  */
 public class SelectionController extends MouseEventHandler {
     Controller controller;
-    Handle activeHandel;
+    Handle activeHandle;
     Point2D previous;
     public SelectionController(Controller controller) {
         super(controller);
@@ -31,8 +24,8 @@ public class SelectionController extends MouseEventHandler {
     public Shape mouseDown(Point2D p) {
         previous = p;
 
-        activeHandel = findHandle(p);
-        if (activeHandel instanceof Default) {
+        activeHandle = findHandle(p);
+        if (activeHandle instanceof Default) {
 
             int selectedIndex = DataModel.getInstance().selectVisibleShape(p);
 
@@ -42,7 +35,7 @@ public class SelectionController extends MouseEventHandler {
                 GUIFunctions.changeSelectedColor(selected.getColor());
                 DataModel.getInstance().setCurrentColor(selected.getColor());
             } else {
-                activeHandel = new None();
+                activeHandle = new None();
                 DataModel.getInstance().setSelected(null,-1);
                 GUIFunctions.changeSelectedColor(DataModel.getInstance().getCurrentColor());
             }
@@ -61,15 +54,50 @@ public class SelectionController extends MouseEventHandler {
         worldToObj.transform(p, objCoordinates);
         
         if (withinTolerance(objCoordinates, new Point2D.Double(0, (int) -shape.getHeight() / 2 - 17))) {
-            System.out.println("Returning the rotate handle");
             return new Rotate();
+        }
+        else if(shape.getState() == State.LINE){
+            Line line=(Line)shape;
+            if(withinTolerance(p, line.getStart())){
+                return new StartLine();
+            }
+            else if(withinTolerance(p, line.getEnd())){
+                return new EndLine();
+            }
+        }
+        else if(shape.getState() == State.TRIANGLE){
+            Triangle t = (Triangle)shape;
+
+            Point2D one = t.getOne();
+            Point2D two = t.getTwo();
+            Point2D three = t.getThree();
+
+            if (withinTolerance(objCoordinates, one))
+                return new OneTriangle();
+
+            if (withinTolerance(objCoordinates, two))
+                return new TwoTriangle();
+
+            if (withinTolerance(objCoordinates, three))
+                return new ThreeTriangle();
+        }
+        else{
+            double heightFromcenter= shape.getHeight()/2;
+            double widthFromcenter= shape.getWidth()/2;
+
+            Point2D tRight = new Point2D.Double(-widthFromcenter, heightFromcenter);
+            Point2D tLeft = new Point2D.Double(-widthFromcenter, -heightFromcenter);
+            Point2D bRight = new Point2D.Double(widthFromcenter, heightFromcenter);
+            Point2D bLeft = new Point2D.Double(widthFromcenter, -heightFromcenter);
+
+            if(withinTolerance(objCoordinates, tLeft) || withinTolerance(objCoordinates, tRight) || withinTolerance(objCoordinates, bRight) || withinTolerance(objCoordinates, bLeft))
+                return new BoundingBox();
         }
 
         return new Default();
-        
     }
 
-    //tolerance of 16 pixles squared 4 pix on each side
+    //tolerance of 16 pixels squared, 4 pix on each side
     private boolean withinTolerance(Point2D objCoordinates, Point2D point) {
         return objCoordinates.distanceSq(point) <= 16;
     }
@@ -85,7 +113,7 @@ public class SelectionController extends MouseEventHandler {
         Shape selected = DataModel.getInstance().getSelected();
         if (selected == null)
             return null;
-        Shape shape= activeHandel.handleAction(p, previous, selected);
+        Shape shape= activeHandle.handleAction(p, previous, selected);
         previous = p;
 
         return shape;

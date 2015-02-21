@@ -1,9 +1,11 @@
 package cs355.code.model;
 
+import com.sun.java.accessibility.util.TopLevelWindowListener;
 import cs355.code.view.Vector;
 import sun.font.StandardTextSource;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -27,17 +29,13 @@ public class Triangle extends Shape{
 
         setCenter(new Point2D.Double(x,y));
 
-        Xpoints[0] = (int)point.getX();
-        Xpoints[1] = (int)point1.getX();
-        Xpoints[2] = (int)point2.getX();
 
-        Ypoints[0]= (int)point.getY();
-        Ypoints[1]= (int)point1.getY();
-        Ypoints[2]= (int)point2.getY();
+        one = new Point2D.Double(point.getX()-x,point.getY()-y);
+        two = new Point2D.Double(point1.getX()-x,point1.getY()-y);
+        three = new Point2D.Double(point2.getX()-x,point2.getY()-y);
 
-        one = point;
-        two = point1;
-        three = point2;
+        setXpoints(point, point1, point2);
+        setYpoints(point, point1, point2);
 
         XpointsObj = this.getXpointsObjFunc();
         YpointsObj = this.getYpointsObjFunc();
@@ -89,11 +87,27 @@ public class Triangle extends Shape{
         return 0;
     }
 
+    @Override
+    public void setWidth(double width) {
+
+    }
+
+    @Override
+    public void setHeight(double height) {
+
+    }
+
     public Point2D getOne() {
         return one;
     }
     public void setOne(Point2D one) {
         this.one = one;
+        Point2D offset = calcCenter();
+        two.setLocation(two.getX() - offset.getX(), two.getY() - offset.getY());
+        three.setLocation(three.getX() - offset.getX(), three.getY() - offset.getY());
+
+        setXpoints(one, two, three);
+        setYpoints(one, two, three);
     }
 
     public Point2D getThree() {
@@ -101,6 +115,12 @@ public class Triangle extends Shape{
     }
     public void setThree(Point2D three) {
         this.three = three;
+        Point2D offset = calcCenter();
+        one.setLocation(one.getX() - offset.getX(), one.getY() - offset.getY());
+        two.setLocation(two.getX() - offset.getX(), two.getY() - offset.getY());
+
+        setXpoints(one, two, three);
+        setYpoints(one, two, three);
     }
 
     public Point2D getTwo() {
@@ -108,6 +128,12 @@ public class Triangle extends Shape{
     }
     public void setTwo(Point2D two) {
         this.two = two;
+        Point2D offset = calcCenter();
+        one.setLocation(one.getX() - offset.getX(), one.getY() - offset.getY());
+        three.setLocation(three.getX() - offset.getX(), three.getY() - offset.getY());
+
+        setXpoints(one, two, three);
+        setYpoints(one, two, three);
     }
 
     public State getState() {
@@ -117,21 +143,24 @@ public class Triangle extends Shape{
         this.state = state;
     }
 
-    public int[] getXpoints() {
-        return Xpoints;
-    }
-    public void setXpoints(int[] xpoints) {
-        Xpoints = xpoints;
-    }
 
+    public void setXpoints(Point2D p1, Point2D p2, Point2D p3){
+        Xpoints[0] = (int)p1.getX();
+        Xpoints[1] = (int)p2.getX();
+        Xpoints[2] = (int)p3.getX();
+    }
     public int[] getYpoints() {
         return Ypoints;
     }
-    public void setYpoints(int[] ypoints) {
-        Ypoints = ypoints;
+
+    public void setYpoints(Point2D p1, Point2D p2, Point2D p3  ) {
+        Ypoints[0]= (int)p1.getY();
+        Ypoints[1]= (int)p2.getY();
+        Ypoints[2]= (int)p3.getY();
     }
 
     public int[] getXpointsObj() {
+        getXpointsObjFunc();
         return XpointsObj;
     }
     public void setXpointsObj(int[] xpointsObj) {
@@ -142,28 +171,39 @@ public class Triangle extends Shape{
         YpointsObj = ypointsObj;
     }
     public int[] getYpointsObj() {
+        getYpointsObjFunc();
         return YpointsObj;
     }
 
     public int[] getXpointsObjFunc() {
-        int[] xs = new int[3];
-        double centerX= this.getCenter().getX();
-        //Deep copy
-        for(int i=0; i < Xpoints.length; i++){
-            xs[i]=(int)(Xpoints[i]-centerX);
-        }
+        Xpoints[0] = (int)one.getX();
+        Xpoints[1] = (int)two.getX();
+        Xpoints[2] = (int)three.getX();
 
-        return xs;
+        return Xpoints;
     }
     public int[] getYpointsObjFunc() {
-        int[] ys = new int[3];
-        double centerY= this.getCenter().getY();
+        Ypoints[0]= (int)one.getY();
+        Ypoints[1]= (int)two.getY();
+        Ypoints[2]= (int)three.getY();
 
-        //Deep copy
-        for(int i=0; i < Ypoints.length; i++){
-            ys[i]=(int)(Ypoints[i]-centerY);
-        }
+        return Ypoints;
+    }
+    public Point2D calcCenter(){
+        double x = (one.getX() + two.getX() + three.getX())/3;
+        double y = (one.getY() + two.getY() + three.getY())/3;
 
-        return ys;
+        Point2D move=new Point2D.Double(x,y);
+
+        AffineTransform unRotate = new AffineTransform();
+        unRotate.rotate(getRotation());
+
+        unRotate.transform(move, move);
+
+        Point2D oldCenter = getCenter();
+
+        setCenter(new Point2D.Double(oldCenter.getX() + move.getX(), oldCenter.getY() + move.getY()));
+
+        return new Point2D.Double(x, y);
     }
 }

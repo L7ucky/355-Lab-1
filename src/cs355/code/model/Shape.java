@@ -84,4 +84,7 @@ public abstract class Shape {
 
     public abstract double getHeight();
     public abstract double getWidth();
+
+    public abstract void setWidth(double width);
+    public abstract void setHeight(double height);
 }

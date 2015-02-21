@@ -64,7 +64,7 @@ public class ViewRefresh implements ViewRefresher, Observer {
                 case TRIANGLE:
                     Triangle triangle = (Triangle)data.get(i);
                     g2d.setTransform(triangle.objectToWorld());
-                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), triangle.getXpoints().length);
+                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), 3);
                     g2d.setColor(triangle.getColor());
                     g2d.fillPolygon(tri);
                     g2d.setTransform(triangle.worldToObject());
@@ -122,6 +122,7 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     Ellipse2D circ = new Ellipse2D.Double(- circle.getRadius(),-circle.getRadius(),cirW,cirH);
                     g2d.setColor(Color.white);
                     g2d.draw(circ);
+                    drawHandle(circle, g2d);
                     g2d.setTransform(circle.worldToObject());
                     break;
                 case LINE:
@@ -134,10 +135,10 @@ public class ViewRefresh implements ViewRefresher, Observer {
                     Triangle triangle = (Triangle)shape;
 
                     g2d.setTransform(triangle.objectToWorld());
-                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), triangle.getXpoints().length);
+                    Polygon tri = new Polygon(triangle.getXpointsObj(), triangle.getYpointsObj(), 3);
                     g2d.setPaint(Color.WHITE);
                     g2d.drawPolygon(tri);
-                    drawHandle(triangle, g2d);
+                    drawTriangleHandle(triangle, g2d);
                     g2d.setTransform(triangle.worldToObject());
                     break;
                 case ELLIPSE:
@@ -176,14 +177,46 @@ public class ViewRefresh implements ViewRefresher, Observer {
         g2d.setColor(line.getColor());
     }
 
+    private void drawTriangleHandle(Shape shape, Graphics2D g2d){
+        Point2D center= shape.getCenter();
+        Triangle triangle = (Triangle)shape;
+        double heightFromcenter= shape.getHeight()/2;
+        g2d.setColor(Color.white);
+
+        // Rotation handle
+        Point2D rotationHandlePoint = new Point2D.Double(0, (-heightFromcenter-17));
+        g2d.fillOval((int) rotationHandlePoint.getX()-3, (int) rotationHandlePoint.getY()-3, 7, 7);
+
+        int[] xs = triangle.getXpointsObj();
+        int[] ys = triangle.getYpointsObj();
+        g2d.fillOval(xs[0] - 3, ys[0] - 3, 7, 7);
+        g2d.fillOval(xs[1]  - 3, ys[1] - 3, 7, 7);
+        g2d.fillOval(xs[2] - 3, ys[2] - 3, 7, 7);
+    }
+
     private void drawHandle(Shape shape, Graphics2D g2d){
 
         Point2D center= shape.getCenter();
-        double heightFromcenter= 0-(shape.getHeight()/2);
+        double heightFromcenter= shape.getHeight()/2;
+        double widthFromcenter= shape.getWidth()/2;
+        g2d.setColor(Color.white);
 
-        // Rotation handle
-        Point2D rotationHandlePoint = new Point2D.Double(0, heightFromcenter-17);
-        g2d.fillOval((int) rotationHandlePoint.getX()-3, (int) rotationHandlePoint.getY()-3, 7, 7);
+        if(shape.getState() != State.CIRCLE) {
+            // Rotation handle
+            Point2D rotationHandlePoint = new Point2D.Double(0, (-heightFromcenter - 17));
+            g2d.fillOval((int) rotationHandlePoint.getX() - 3, (int) rotationHandlePoint.getY() - 3, 7, 7);
+        }
+
+        Point2D tRight = new Point2D.Double(-widthFromcenter, heightFromcenter);
+        Point2D tLeft = new Point2D.Double(-widthFromcenter, -heightFromcenter);
+        Point2D bRight = new Point2D.Double(widthFromcenter, heightFromcenter);
+        Point2D bLeft = new Point2D.Double(widthFromcenter, -heightFromcenter);
+
+        g2d.fillOval((int) tLeft.getX() - 3, (int) tLeft.getY() - 3, 7, 7);
+        g2d.fillOval((int) tRight.getX() - 3, (int) tRight.getY()-3, 7, 7);
+        g2d.fillOval((int) bLeft.getX()-3, (int) bLeft.getY()-3, 7, 7);
+        g2d.fillOval((int) bRight.getX()-3, (int) bRight.getY()-3, 7, 7);
+
     }
 
     private void rotateShape(Graphics2D g2d,  Shape shape){

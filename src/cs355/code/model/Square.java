@@ -75,4 +75,14 @@ public class Square extends Shape {
     public double getWidth() {
         return size;
     }
+
+    @Override
+    public void setWidth(double width) {
+this.size = width;
+    }
+
+    @Override
+    public void setHeight(double height) {
+        this.size = height;
+    }
 }

@@ -47,4 +47,14 @@ public class Circle extends Shape{
     public double getWidth() {
         return radius*2;
     }
+
+    @Override
+    public void setWidth(double width) {
+        this.radius = width/2;
+    }
+
+    @Override
+    public void setHeight(double height) {
+        this.radius = height/2;
+    }
 }

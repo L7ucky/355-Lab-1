@@ -77,4 +77,14 @@ public class Line extends Shape{
     public double getWidth() {
         return 0;
     }
+
+    @Override
+    public void setWidth(double width) {
+
+    }
+
+    @Override
+    public void setHeight(double height) {
+
+    }
 }
