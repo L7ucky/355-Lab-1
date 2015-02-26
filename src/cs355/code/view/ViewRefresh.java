@@ -226,7 +226,7 @@ public class ViewRefresh implements ViewRefresher, Observer {
 
         objToWorld.transform(center, center);
 
-        AffineTransform t = new AffineTransform();
+        AffineTransform t = new MyTransform();
         t.translate(center.getX(), center.getY());
         t.rotate(shape.getRotation());
 

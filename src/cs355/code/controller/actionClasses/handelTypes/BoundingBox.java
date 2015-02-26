@@ -2,6 +2,7 @@ package cs355.code.controller.actionClasses.handelTypes;
 
 import cs355.code.model.Shape;
 import cs355.code.model.State;
+import cs355.code.view.MyTransform;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -14,7 +15,7 @@ public class BoundingBox implements Handle {
     public Shape handleAction(Point2D newPoint, Point2D previousPoint, Shape selected) {
         Point2D center = selected.getCenter();
 
-        AffineTransform worldToObj = new AffineTransform();
+        AffineTransform worldToObj = new MyTransform();
         worldToObj.rotate(-1 * selected.getRotation());
         worldToObj.translate(-1 * center.getX(), -1 * center.getY());
 
@@ -37,7 +38,7 @@ public class BoundingBox implements Handle {
         if(newCorner.getY()< 0)
             polarityY = -1;
 
-        AffineTransform unRotate = new AffineTransform();
+        AffineTransform unRotate = new MyTransform();
         unRotate.rotate(selected.getRotation());
 
         Point2D oppositeCorner = new Point2D.Double(-polarityX * selected.getWidth()/2, -polarityY * selected.getHeight()/2);

@@ -1,5 +1,7 @@
 package cs355.code.model;
 
+import cs355.code.view.MyTransform;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -17,7 +19,7 @@ public abstract class Shape {
     public AffineTransform worldToObject() {
         if(this.getState() == State.LINE)
             return lineWorldToObject();
-        AffineTransform worldToObj = new AffineTransform();
+        AffineTransform worldToObj = new MyTransform();
         worldToObj.rotate(-this.getRotation());
         worldToObj.translate(-this.getCenter().getX(), -this.getCenter().getY());
         return worldToObj;
@@ -26,7 +28,7 @@ public abstract class Shape {
     private AffineTransform lineWorldToObject() {
         Line line = (Line)this;
 
-        AffineTransform worldToObj = new AffineTransform();
+        AffineTransform worldToObj = new MyTransform();
         worldToObj.rotate(-this.getRotation());
         worldToObj.translate(-line.getStart().getX(), -line.getStart().getY());
         return worldToObj;
@@ -35,7 +37,7 @@ public abstract class Shape {
     public AffineTransform objectToWorld() {
         if(this.getState() == State.LINE)
             return lineObjectToWorld();
-        AffineTransform objToWorld = new AffineTransform();
+        AffineTransform objToWorld = new MyTransform();
         objToWorld.translate(center.getX(), center.getY());
         objToWorld.rotate(this.getRotation());
         return objToWorld;
@@ -44,7 +46,7 @@ public abstract class Shape {
     private AffineTransform lineObjectToWorld() {
         Line line = (Line)this;
 
-        AffineTransform objToWorld = new AffineTransform();
+        AffineTransform objToWorld = new MyTransform();
         objToWorld.translate(line.getStart().getX(), line.getStart().getY());
         objToWorld.rotate(this.getRotation());
         return objToWorld;

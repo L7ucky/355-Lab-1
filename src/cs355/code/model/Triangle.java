@@ -1,6 +1,7 @@
 package cs355.code.model;
 
 import com.sun.java.accessibility.util.TopLevelWindowListener;
+import cs355.code.view.MyTransform;
 import cs355.code.view.Vector;
 import sun.font.StandardTextSource;
 
@@ -195,7 +196,7 @@ public class Triangle extends Shape{
 
         Point2D move=new Point2D.Double(x,y);
 
-        AffineTransform unRotate = new AffineTransform();
+        AffineTransform unRotate = new MyTransform();
         unRotate.rotate(getRotation());
 
         unRotate.transform(move, move);
