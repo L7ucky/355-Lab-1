@@ -6,6 +6,7 @@ import cs355.code.controller.actionClasses.*;
 import cs355.code.model.*;
 import cs355.code.view.GUIFunctions;
 import cs355.code.model.Shape;
+import cs355.code.view.ViewRefresh;
 
 import javax.xml.crypto.Data;
 import java.awt.*;
@@ -28,12 +29,14 @@ public class Controller implements CS355Controller {
     private boolean isActive = false;
     private Point2D originalClick = null;
     private int currentShapeIndex = 0;
+    private ViewRefresh view;
 
     private MouseListener mouseListener;
     private MouseMotionListener mouseDragListener;
 
-    public Controller(DataModel data){
+    public Controller(DataModel data, ViewRefresh view){
         this.data = data;
+        this.view = view;
 
         createMouseListener();
         createMouseDraggedListener();
@@ -108,22 +111,22 @@ public class Controller implements CS355Controller {
 
     @Override
     public void zoomInButtonHit() {
-
+        view.zoomIN();
     }
 
     @Override
     public void zoomOutButtonHit() {
-
+        view.zoomOUT();
     }
 
     @Override
     public void hScrollbarChanged(int value) {
-
+        view.scrollX(value);
     }
 
     @Override
     public void vScrollbarChanged(int value) {
-
+        view.scrollY(value);
     }
 
     @Override
@@ -181,9 +184,12 @@ public class Controller implements CS355Controller {
         mouseListener = new MouseListener() {
             @Override
             public void mousePressed(MouseEvent e) {
-                setOriginalClick(e.getPoint());
+
+
                 Point2D p = new Point2D.Double();
                 p.setLocation(e.getPoint());
+                view.viewToWorld.transform(p,p);
+                setOriginalClick(p);
                 try{
                     Shape shape = currentState.mouseDown(p);
                     DataModel.getInstance().addShape(shape);
@@ -196,6 +202,7 @@ public class Controller implements CS355Controller {
             public void mouseReleased(MouseEvent e) {
                 Point2D p = new Point2D.Double();
                 p.setLocation(e.getPoint());
+                view.viewToWorld.transform(p,p);
                 currentState.mouseUp(p);
             }
 
@@ -203,6 +210,8 @@ public class Controller implements CS355Controller {
             public void mouseClicked(MouseEvent e) {
                 Point2D p = new Point2D.Double();
                 p.setLocation(e.getPoint());
+                view.viewToWorld.transform(p,p);
+                System.out.println("This is point:\t( "+p.getX()+" , "+p.getY()+" )");
                 try{
                     Shape shape = currentState.mouseClicked(p);
                     DataModel.getInstance().addShape(shape);
@@ -228,6 +237,7 @@ public class Controller implements CS355Controller {
                 currentShapeIndex = ((DataModel.getInstance().getData().size()) - 1);
                 Point2D p = new Point2D.Double();
                 p.setLocation(e.getPoint());
+                view.viewToWorld.transform(p,p);
                 try{
                     Shape shape = currentState.mouseDragged(p);
                     if(DataModel.getInstance().getSelected()!= null)
@@ -242,6 +252,7 @@ public class Controller implements CS355Controller {
             public void mouseMoved(MouseEvent e) {
                 Point2D p = new Point2D.Double();
                 p.setLocation(e.getPoint());
+                view.viewToWorld.transform(p,p);
                 try{
                     currentState.mouseMoved(p);
 
@@ -303,5 +314,9 @@ public class Controller implements CS355Controller {
     }
     public void setMouseDragListener(MouseMotionListener mouseDragListener) {
         this.mouseDragListener = mouseDragListener;
+    }
+
+    public ViewRefresh getView() {
+        return view;
     }
 }

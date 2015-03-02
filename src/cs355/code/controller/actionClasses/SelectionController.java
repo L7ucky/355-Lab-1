@@ -53,7 +53,7 @@ public class SelectionController extends MouseEventHandler {
         Point2D objCoordinates = new Point2D.Double();
         worldToObj.transform(p, objCoordinates);
         
-        if (withinTolerance(objCoordinates, new Point2D.Double(0, (int) -shape.getHeight() / 2 - 17))) {
+        if (withinTolerance(objCoordinates, new Point2D.Double(0, (int) -shape.getHeight() / 2 - (int)(17/controller.getView().zoomMagnitude)))) {
             return new Rotate();
         }
         else if(shape.getState() == State.LINE){
@@ -99,7 +99,12 @@ public class SelectionController extends MouseEventHandler {
 
     //tolerance of 16 pixels squared, 4 pix on each side
     private boolean withinTolerance(Point2D objCoordinates, Point2D point) {
-        return objCoordinates.distanceSq(point) <= 16;
+        AffineTransform worldToView = controller.getView().worldToView;
+        Point2D _p1 = new Point2D.Double();
+        Point2D _p2 = new Point2D.Double();
+        worldToView.transform(objCoordinates,_p1);
+        worldToView.transform(point,_p2);
+        return _p1.distanceSq(_p2) <= 200;
     }
 
     @Override

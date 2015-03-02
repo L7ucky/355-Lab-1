@@ -23,8 +23,9 @@ public class CS355
     {
     	// Fill in the parameters below with your controller, view, 
     	//   mouse listener, and mouse motion listener
-        Controller controller = new Controller(DataModel.getInstance());
+
         ViewRefresh refreshView = new ViewRefresh();
+        Controller controller = new Controller(DataModel.getInstance(), refreshView);
         GUIFunctions.createCS355Frame(controller,refreshView,controller.getMouseListener(),controller.getMouseDragListener());
         GUIFunctions.changeSelectedColor(DataModel.getInstance().getCurrentColor());
         
