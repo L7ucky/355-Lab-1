@@ -4,7 +4,9 @@ import cs355.code.controller.Controller;
 import cs355.code.controller.actionClasses.handelTypes.*;
 import cs355.code.model.*;
 import cs355.code.view.GUIFunctions;
-
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 

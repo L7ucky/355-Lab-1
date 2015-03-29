@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="AppleJavaExtensions">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/AppleJavaExtensions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/asm-debug-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jinput.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/laf-plugin-7.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/laf-widget-7.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/log4j-api-2.0-beta9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl-debug.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl_test.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl_util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl_util_applet.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lzma.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/substance-7.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/trident-7.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
